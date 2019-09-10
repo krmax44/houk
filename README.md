@@ -1,6 +1,6 @@
 # Houk
 
-[![Build Status](https://travis-ci.com/krmax44/houk.svg?branch=master)](https://travis-ci.com/krmax44/normalize-repo)
+[![Build Status](https://travis-ci.com/krmax44/houk.svg?branch=master)](https://travis-ci.com/krmax44/houk)
 [![install size](https://packagephobia.now.sh/badge?p=houk)](https://packagephobia.now.sh/result?p=houk)
 ![npm version](https://img.shields.io/npm/v/houk)
 
