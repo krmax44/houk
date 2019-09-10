@@ -1,0 +1,82 @@
+# Houk
+
+[![Build Status](https://travis-ci.com/krmax44/houk.svg?branch=master)](https://travis-ci.com/krmax44/normalize-repo)
+[![install size](https://packagephobia.now.sh/badge?p=houk)](https://packagephobia.now.sh/result?p=houk)
+![npm version](https://img.shields.io/npm/v/houk)
+
+A super simple event bus built for hook chains.
+
+## Installation
+
+```bash
+yarn add houk
+# or using npm
+npm i houk
+```
+
+## Example
+
+```js
+import Houk from 'houk';
+
+class MyClass extends Houk {
+	constructor() {
+		super();
+	}
+
+	async fire() {
+		const value = 'Hello $name!';
+
+		const newValue = await this.emit(
+			'myEvent', // event name
+			{ user: 'Max' }, // will be available to the listener function as `this`
+			value // will be passed as a parameter to the listener
+		);
+
+		console.log('All hooks ran, the new value is ', newValue);
+	}
+}
+
+const myInstance = new MyClass();
+myInstance.on('myEvent', function(value) {
+	// Please note that `this` is not available in an arrow function!
+	const { user } = this;
+	return value.replace('$user', user);
+});
+
+myInstance.fire();
+```
+
+## API
+
+### `Houk.on`
+
+Listen to a particular event.
+
+```ts
+on(event: string, fn: (...q: any) => any): void
+```
+
+### `Houk.off`
+
+Unregister an event listener. Returns true on success and false when the event listener didn't exist before.
+
+```ts
+off(event: string, fn: (...q: any) => any): boolean
+```
+
+### `Houk.emit`
+
+Only available to deriving classes. Trigger all listeners of a particular event. `thisArg` will be available as `this` to the listener function (as long as it is **not** an arrow function), `...args` will be passed along to the listener. Returns a promise containing the listener return value.
+
+```ts
+emit(
+  event: string,
+  thisArg: any,
+  ...args: any
+): Promise<any>
+```
+
+### `Houk.getListeners`
+
+Only available to deriving classes, returns a set of listener functions.
