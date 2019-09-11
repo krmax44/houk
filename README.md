@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/krmax44/houk.svg?branch=master)](https://travis-ci.com/krmax44/houk)
 [![install size](https://packagephobia.now.sh/badge?p=houk)](https://packagephobia.now.sh/result?p=houk)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/houk)](https://bundlephobia.com/result?p=houk)
 [![npm version](https://img.shields.io/npm/v/houk)](https://www.npmjs.com/package/houk)
 
 A super simple event bus built for hook chains.
