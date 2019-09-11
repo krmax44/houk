@@ -38,7 +38,6 @@ export default abstract class Houk {
 		...args: any
 	): Promise<any> {
 		const listeners = this.getListeners(event);
-		console.log(listeners);
 
 		if (listeners.size === 0) {
 			return args.length === 1 ? args[0] : args;
@@ -67,8 +66,19 @@ function toArray(input: any): any[] {
 	return Array.isArray(input) ? input : [input];
 }
 
+/**
+ * HoukBus allows you to use Houk without creating an extended class.
+ * All methods are public.
+ */
+export class HoukBus extends Houk {
+	public emit = super.emit;
+
+	public getListeners = super.getListeners;
+}
+
 if (typeof module !== 'undefined') {
 	module.exports = Houk;
 	module.exports.default = Houk;
 	module.exports.Houk = Houk;
+	module.exports.HoukBus = HoukBus;
 }

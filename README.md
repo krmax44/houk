@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/krmax44/houk.svg?branch=master)](https://travis-ci.com/krmax44/houk)
 [![install size](https://packagephobia.now.sh/badge?p=houk)](https://packagephobia.now.sh/result?p=houk)
-![npm version](https://img.shields.io/npm/v/houk)
+[![npm version](https://img.shields.io/npm/v/houk)](https://www.npmjs.com/package/houk)
 
 A super simple event bus built for hook chains.
 
@@ -47,7 +47,23 @@ myInstance.on('myEvent', function(value) {
 myInstance.fire();
 ```
 
+If you just want an open hook bus, you can use `HoukBus`, where all methods are public.
+
+```js
+import { HoukBus } from 'houk';
+
+const bus = new HoukBus();
+
+bus.on('newUser', user => console.log(`Hello ${user}!`));
+
+bus.emit('newUser', undefined, 'Max');
+
+// --> Hello Max!
+```
+
 ## API
+
+The same API applies to `HoukBus` as well, with the difference being that it's not an abstract class and all methods are public.
 
 ### `Houk.on`
 
