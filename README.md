@@ -88,7 +88,7 @@ Only available to deriving classes. Trigger all listeners of a particular event.
 ```ts
 emit(
   event: string,
-  thisArg: any,
+  thisArg?: any,
   ...args: any
 ): Promise<any>
 ```

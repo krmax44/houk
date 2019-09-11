@@ -34,7 +34,7 @@ export default abstract class Houk {
 	 */
 	protected async emit(
 		event: string,
-		thisArg: any,
+		thisArg?: any,
 		...args: any
 	): Promise<any> {
 		const listeners = this.getListeners(event);
