@@ -51,8 +51,6 @@
 			{
 				"files": "**/__tests__/**",
 				"rules": {
-					"import/no-extraneous-dependencies": "off",
-					"import/no-unassigned-import": "off",
 					"unicorn/filename-case": "off",
 					"no-undef": "off"
 				}
@@ -67,7 +65,8 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-push": "yarn test"
+			"pre-commit": "yarn lint",
+			"pre-push": "yarn test --clear-cache && yarn test"
 		}
 	},
 	"dependencies": {
