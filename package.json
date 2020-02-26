@@ -1,6 +1,6 @@
 {
 	"name": "houk",
-	"version": "1.1.1",
+	"version": "2.0.0",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
 	"files": [
@@ -47,15 +47,17 @@
 			"no-await-in-loop": "off",
 			"@typescript-eslint/prefer-nullish-coalescing": "off"
 		},
-		"overrides": [{
-			"files": "**/__tests__/**",
-			"rules": {
-				"import/no-extraneous-dependencies": "off",
-				"import/no-unassigned-import": "off",
-				"unicorn/filename-case": "off",
-				"no-undef": "off"
+		"overrides": [
+			{
+				"files": "**/__tests__/**",
+				"rules": {
+					"import/no-extraneous-dependencies": "off",
+					"import/no-unassigned-import": "off",
+					"unicorn/filename-case": "off",
+					"no-undef": "off"
+				}
 			}
-		}],
+		],
 		"prettier": true
 	},
 	"prettier": {
