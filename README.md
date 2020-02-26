@@ -1,11 +1,11 @@
 # Houk
 
-[![Build Status](https://travis-ci.com/krmax44/houk.svg?branch=master)](https://travis-ci.com/krmax44/houk)
-[![install size](https://packagephobia.now.sh/badge?p=houk)](https://packagephobia.now.sh/result?p=houk)
+[![Build Status](https://img.shields.io/gitlab/pipeline/krmax44/houk)](https://gitlab.com/krmax44/houk/pipelines)
+[![Coverage](https://gitlab.com/krmax44/houk/badges/master/coverage.svg?style=flat)](https://gitlab.com/krmax44/houk/pipelines)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/houk)](https://bundlephobia.com/result?p=houk)
 [![npm version](https://img.shields.io/npm/v/houk)](https://www.npmjs.com/package/houk)
 
-A super simple event bus built for hook chains.
+A safely typed, super simple, universal event bus built for hook chains.
 
 ## Installation
 
@@ -17,38 +17,35 @@ npm i houk
 
 ## Example
 
-```js
+```ts
 import Houk from 'houk';
 
-class MyClass extends Houk {
-	constructor() {
-		super();
-	}
+type Events = {
+	greeting: (name: string, text: string) => string;
+};
 
-	async fire() {
-		const value = 'Hello $name!';
+class MyClass extends Houk<Events> {
+	async sayHello() {
+		const text = 'Hello $name!';
+		const name = 'Max';
 
-		const newValue = await this.emit(
-			'myEvent', // event name
-			{ user: 'Max' }, // will be available to the listener function as `this`
-			value // will be passed as a parameter to the listener
-		);
+		const greeting = await this.emit('greeting', name, text);
 
-		console.log('All hooks ran, the new value is ', newValue);
+		console.log('All hooks ran, the hook chain returned:', greeting);
 	}
 }
 
 const myInstance = new MyClass();
-myInstance.on('myEvent', function(value) {
-	// Please note that `this` is not available in an arrow function!
-	const { user } = this;
-	return value.replace('$user', user);
+myInstance.on('greeting', (name, text) => {
+	return text.replace('$name', name);
 });
 
 myInstance.fire();
+
+// --> All hooks ran, the hook chain returned: Hello Max!
 ```
 
-If you just want an open hook bus, you can use `HoukBus`, where all methods are public.
+If you just want an open, untyped hook bus, you can use `HoukBus`, where all methods are public. Perfect for use with plain JavaScript.
 
 ```js
 import { HoukBus } from 'houk';
@@ -64,14 +61,14 @@ bus.emit('newUser', undefined, 'Max');
 
 ## API
 
-The same API applies to `HoukBus` as well, with the difference being that it's not an abstract class and all methods are public.
+The same API applies to `HoukBus` as well, with the difference being that it's not an abstract class, all methods are public and there's no type safety.
 
 ### `Houk.on`
 
-Listen to a particular event.
+Listen to a particular event. Takes the event name, a listener function and whether the listener should only be called once (false by default).
 
 ```ts
-on(event: string, fn: (...q: any) => any): void
+on(eventName, listener, once?): void
 ```
 
 ### `Houk.off`
@@ -79,19 +76,15 @@ on(event: string, fn: (...q: any) => any): void
 Unregister an event listener. Returns true on success and false when the event listener didn't exist before.
 
 ```ts
-off(event: string, fn: (...q: any) => any): boolean
+off(eventName, listener): boolean
 ```
 
 ### `Houk.emit`
 
-Only available to deriving classes. Trigger all listeners of a particular event. `thisArg` will be available as `this` to the listener function (as long as it is **not** an arrow function), `...args` will be passed along to the listener. Returns a promise containing the listener return value.
+Only available to deriving classes. Trigger all listeners of a particular event. `...args` will be passed along to the listener. Returns a promise containing the listener return value.
 
 ```ts
-emit(
-  event: string,
-  thisArg?: any,
-  ...args: any
-): Promise<any>
+emit(eventName, ...args): Promise
 ```
 
 ### `Houk.getListeners`

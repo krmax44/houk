@@ -1,10 +1,7 @@
-import { expect } from 'chai';
-import * as random from './utils/random';
+import randomString from './utils/randomString';
 import Houk from '..';
-import 'mocha';
 
-const randomString = random.randomString();
-const randomObject = random.randomObject();
+const random = randomString();
 
 function reverse(input: string): string {
 	return input
@@ -13,22 +10,24 @@ function reverse(input: string): string {
 		.join('');
 }
 
-class TestClass extends Houk {
-	public value: string = '';
+type Events = {
+	test: (a: string) => any;
+};
+
+class TestClass extends Houk<Events> {
+	public value = '';
 
 	public async fire(): Promise<any> {
-		this.value = await this.emit('test', randomObject, randomString);
+		this.value = await this.emit('test', random);
 	}
 }
 
 describe('remove listener', () => {
 	it('should remove the listener', async () => {
 		const test = new TestClass();
-		let thisArg;
-		let arg: string;
+		let arg = '';
 
 		function listener(input: string): string {
-			thisArg = this;
 			arg = input;
 
 			return input + input;
@@ -46,10 +45,9 @@ describe('remove listener', () => {
 		await test.fire();
 		await test.fire();
 
-		const valueOutput = reverse(randomString);
+		const valueOutput = reverse(random);
 
-		expect(thisArg).to.eql(randomObject);
-		expect(arg).to.equal(randomString);
-		expect(test.value).to.equal(valueOutput);
+		expect(arg).toEqual(random);
+		expect(test.value).toEqual(valueOutput);
 	});
 });

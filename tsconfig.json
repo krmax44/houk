@@ -1,21 +1,15 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "preserveConstEnums": true,
-    "target": "es2015",
-    "esModuleInterop": true,
-    "declaration": true,
-    "outDir": "./build/"
-  },
-  "exclude": [
-    "node_modules",
-    "**/tests/**",
-    "**/build/**"
-  ],
-  "include": [
-    "src/**/*"
-  ],
-  "compileOnSave": true
+	"compilerOptions": {
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"strict": true,
+		"target": "esnext",
+		"esModuleInterop": true,
+		"declaration": true,
+		"outDir": "./build/"
+	},
+	"exclude": ["node_modules", "**/__tests__/**", "build"],
+	"include": ["src/**/*"],
+	"compileOnSave": true,
+	"types": ["jest"]
 }

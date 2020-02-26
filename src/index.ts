@@ -1,18 +1,29 @@
-type Fn = (...q: any) => any;
-type ListenerSet = Set<Fn>;
+import alwaysArray from 'always-array';
+
+type Fn = (...q: any) => void;
+type ListenerSet = Set<{ fn: Fn; once: boolean }>;
 type Listeners = Map<string, ListenerSet>;
 
-export default abstract class Houk {
+interface Events {
+	[key: string]: Fn;
+}
+
+export default abstract class Houk<E extends Events> {
 	protected listeners: Listeners = new Map();
 
 	/**
 	 * Add an event listener
 	 * @param event The event to listen to
 	 * @param fn The event handler
+	 * @param once If true, the listener will be removed once invoked
 	 */
-	public on(event: string, fn: Fn): void {
+	public on<P extends keyof E>(
+		event: P & string,
+		fn: E[P],
+		once = false
+	): void {
 		const listeners = this.getListeners(event);
-		listeners.add(fn);
+		listeners.add({ fn, once });
 		this.listeners.set(event, listeners);
 	}
 
@@ -21,36 +32,43 @@ export default abstract class Houk {
 	 * @param event The event name
 	 * @param fn The event handler
 	 */
-	public off(event: string, fn: Fn): boolean {
+	public off<P extends keyof E>(event: P & string, fn: E[P]): boolean {
 		const listeners = this.getListeners(event);
-		return listeners.delete(fn);
+		let found = false;
+
+		for (const listener of listeners) {
+			if (listener.fn === fn) {
+				listeners.delete(listener);
+				found = true;
+			}
+		}
+
+		return found;
 	}
 
 	/**
 	 Emit an event to all listeners.
 	 * @param event The event name
-	 * @param thisArg The value of `this` which will be passed to the listener function.
 	 * @param args Arguments that will be passed to the listener function.
 	 */
-	protected async emit(
-		event: string,
-		thisArg?: any,
-		...args: any
-	): Promise<any> {
+	protected async emit<P extends keyof E>(
+		event: P & string,
+		...args: Parameters<E[P]>
+	): Promise<Exclude<ReturnType<E[P]>, Promise<ReturnType<E[P]>>>> {
 		const listeners = this.getListeners(event);
 
 		if (listeners.size === 0) {
 			return args.length === 1 ? args[0] : args;
 		}
 
-		let result: any = args;
+		let lastReturn: any = args;
 		for (const listener of listeners.values()) {
-			const array = toArray(result);
-			result =
-				(await Promise.resolve(listener.apply(thisArg, array))) || result;
+			const params = alwaysArray(lastReturn);
+			const returnValue = await Promise.resolve(listener.fn(...params));
+			lastReturn = returnValue === undefined ? lastReturn : returnValue;
 		}
 
-		return result;
+		return lastReturn;
 	}
 
 	/**
@@ -62,20 +80,17 @@ export default abstract class Houk {
 	}
 }
 
-function toArray(input: any): any[] {
-	return Array.isArray(input) ? input : [input];
-}
-
 /**
  * HoukBus allows you to use Houk without creating an extended class.
  * All methods are public.
  */
-export class HoukBus extends Houk {
+export class HoukBus extends Houk<Events> {
 	public emit = super.emit;
 
 	public getListeners = super.getListeners;
 }
 
+// istanbul ignore next
 if (typeof module !== 'undefined') {
 	module.exports = Houk;
 	module.exports.default = Houk;
