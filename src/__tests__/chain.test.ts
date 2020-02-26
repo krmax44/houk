@@ -11,7 +11,7 @@ class TestClass extends Houk<Events> {
 	public value = '';
 
 	public async fire(): Promise<void> {
-		this.value = await this.emit('test', random);
+		this.value = (await this.emit('test', random)) as string;
 	}
 }
 
