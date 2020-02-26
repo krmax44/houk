@@ -40,7 +40,7 @@ myInstance.on('greeting', (name, text) => {
 	return text.replace('$name', name);
 });
 
-myInstance.fire();
+myInstance.sayHello();
 
 // --> All hooks ran, the hook chain returned: Hello Max!
 ```
@@ -54,7 +54,7 @@ const bus = new HoukBus();
 
 bus.on('newUser', user => console.log(`Hello ${user}!`));
 
-bus.emit('newUser', undefined, 'Max');
+bus.emit('newUser', 'Max');
 
 // --> Hello Max!
 ```
