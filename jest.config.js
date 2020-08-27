@@ -5,5 +5,6 @@ module.exports = {
 	collectCoverageFrom: ['./src/**/*.ts', '!**/node_modules/**'],
 	transform: {
 		'^.+\\.ts$': 'ts-jest'
-	}
+	},
+	setupFilesAfterEnv: ['jest-extended']
 };

@@ -17,19 +17,20 @@
 		"dev": "tsc -w"
 	},
 	"devDependencies": {
-		"@types/jest": "^25.1.3",
-		"@typescript-eslint/eslint-plugin": "^2.21.0",
-		"@typescript-eslint/parser": "^2.21.0",
-		"eslint-config-prettier": "^6.10.0",
-		"eslint-config-xo-typescript": "^0.26.0",
-		"eslint-plugin-prettier": "^3.1.2",
-		"husky": "^4.2.3",
-		"jest": "^25.1.0",
-		"np": "^6.1.0",
-		"prettier": "^1.19.1",
-		"ts-jest": "^25.2.1",
-		"typescript": "^3.8.2",
-		"xo": "^0.27.2"
+		"@types/jest": "^26.0.10",
+		"@typescript-eslint/eslint-plugin": "^3.10.1",
+		"@typescript-eslint/parser": "^3.10.1",
+		"eslint-config-prettier": "^6.11.0",
+		"eslint-config-xo-typescript": "^0.32.0",
+		"eslint-plugin-prettier": "^3.1.4",
+		"husky": "^4.2.5",
+		"jest": "^26.4.2",
+		"jest-extended": "^0.11.5",
+		"np": "^6.4.0",
+		"prettier": "^2.1.1",
+		"ts-jest": "^26.3.0",
+		"typescript": "^4.0.2",
+		"xo": "^0.33.0"
 	},
 	"xo": {
 		"extends": [
@@ -45,13 +46,13 @@
 		],
 		"rules": {
 			"no-await-in-loop": "off",
-			"@typescript-eslint/prefer-nullish-coalescing": "off"
+			"unicorn/filename-case": "off",
+			"@typescript-eslint/explicit-function-return-type": "off"
 		},
 		"overrides": [
 			{
 				"files": "**/__tests__/**",
 				"rules": {
-					"unicorn/filename-case": "off",
 					"no-undef": "off"
 				}
 			}

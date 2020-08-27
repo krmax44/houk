@@ -1,15 +1,14 @@
-import alwaysArray from 'always-array';
+type EventTypes = {
+	[key: string]: any[];
+};
 
-type Fn = (...q: any) => void;
-type ListenerSet = Set<{ fn: Fn; once: boolean }>;
-type Listeners = Map<string, ListenerSet>;
+type EventStore<Types extends EventTypes> = {
+	[key in keyof Types]: Set<(...q: Types[key]) => void>;
+};
 
-interface Events {
-	[key: string]: Fn;
-}
-
-export default abstract class Houk<E extends Events> {
-	protected listeners: Listeners = new Map();
+export default abstract class Houk<Events extends EventTypes> {
+	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+	readonly events = {} as EventStore<Events>;
 
 	/**
 	 * Add an event listener
@@ -17,14 +16,18 @@ export default abstract class Houk<E extends Events> {
 	 * @param fn The event handler
 	 * @param once If true, the listener will be removed once invoked
 	 */
-	public on<P extends keyof E>(
-		event: P & string,
-		fn: E[P],
+	public on<EventName extends keyof Events>(
+		event: EventName,
+		fn: (...args: Events[EventName]) => void,
 		once = false
 	): void {
-		const listeners = this.getListeners(event);
-		listeners.add({ fn, once });
-		this.listeners.set(event, listeners);
+		this.getListeners(event).add(fn);
+
+		if (once) {
+			this.on(event, () => {
+				this.off(event, fn);
+			});
+		}
 	}
 
 	/**
@@ -32,68 +35,49 @@ export default abstract class Houk<E extends Events> {
 	 * @param event The event name
 	 * @param fn The event handler
 	 */
-	public off<P extends keyof E>(event: P & string, fn: E[P]): boolean {
-		const listeners = this.getListeners(event);
-		let found = false;
-
-		for (const listener of listeners) {
-			if (listener.fn === fn) {
-				listeners.delete(listener);
-				found = true;
-			}
-		}
-
-		return found;
+	public off<EventName extends keyof Events>(
+		event: EventName,
+		fn: (...args: Events[EventName]) => void
+	): boolean {
+		return this.getListeners(event).delete(fn);
 	}
 
 	/**
-	 Emit an event to all listeners.
+	 Emit an event to all listeners. Listeners will be called in the order of registration. All listeners run at once.abs
+	* @returns The promise will be resolved once all listener functions have returned a resolved promise.
 	 * @param event The event name
-	 * @param args Arguments that will be passed to the listener function.
+	 * @param args Arguments that will be passed to the listener functions.
 	 */
-	protected async emit<P extends keyof E>(
-		event: P & string,
-		...args: Parameters<E[P]>
-	): Promise<Exclude<ReturnType<E[P]>, Promise<ReturnType<E[P]>>>> {
-		const listeners = this.getListeners(event);
-
-		if (listeners.size === 0) {
-			return args.length === 1 ? args[0] : args;
-		}
-
-		let lastReturn: any = args;
-		for (const listener of listeners.values()) {
-			const params = alwaysArray(lastReturn);
-			const returnValue = await Promise.resolve(listener.fn(...params));
-			lastReturn = returnValue === undefined ? lastReturn : returnValue;
-		}
-
-		return lastReturn;
+	protected async emit<EventName extends keyof Events>(
+		event: EventName,
+		...args: Events[EventName]
+	): Promise<void> {
+		const promises = [...this.getListeners(event)].map(async (listener) =>
+			Promise.resolve(listener(...args))
+		);
+		await Promise.all(promises);
 	}
 
 	/**
-	 * Get all listeners of a particular event
-	 * @param event Event name
+	 Emit an event to all listeners. Listeners will be called in the order of registration. One listener runs at a time.
+	 * @returns The promise will be resolved once all listener functions have returned a resolved promise.
+	 * @param event The event name
+	 * @param args Arguments that will be passed to the listener functions.
 	 */
-	protected getListeners(event: string): ListenerSet {
-		return this.listeners.get(event) || new Set();
+	protected async emitSync<EventName extends keyof Events>(
+		event: EventName,
+		...args: Events[EventName]
+	): Promise<void> {
+		for (const listener of this.getListeners(event)) {
+			await Promise.resolve(listener(...args));
+		}
 	}
-}
 
-/**
- * HoukBus allows you to use Houk without creating an extended class.
- * All methods are public.
- */
-export class HoukBus extends Houk<Events> {
-	public emit = super.emit;
+	private getListeners<EventName extends keyof Events>(
+		event: EventName
+	): EventStore<Events>[EventName] {
+		if (!this.events[event]) this.events[event] = new Set();
 
-	public getListeners = super.getListeners;
-}
-
-// istanbul ignore next
-if (typeof module !== 'undefined') {
-	module.exports = Houk;
-	module.exports.default = Houk;
-	module.exports.Houk = Houk;
-	module.exports.HoukBus = HoukBus;
+		return this.events[event];
+	}
 }

@@ -9,7 +9,7 @@
 		"outDir": "./build/"
 	},
 	"exclude": ["node_modules", "**/__tests__/**", "build"],
-	"include": ["src/**/*"],
+	"include": ["src/**/*", "jest.d.ts"],
 	"compileOnSave": true,
 	"types": ["jest"]
 }

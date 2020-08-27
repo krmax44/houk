@@ -1,34 +1,62 @@
-import randomString from './utils/randomString';
 import Houk from '..';
 
-const random = randomString();
+describe('HoukClass', () => {
+	it('emits to listeners', () => {
+		expect.assertions(13);
 
-type Events = {
-	test: (a: string) => string;
-};
+		class Test extends Houk<{
+			event1: [something: number];
+			event2: [example: string, life: number];
+			event3: [obj: { foo: boolean }];
+		}> {
+			public fire(): void {
+				void this.emit('event1', 4);
+				void this.emit('event2', 'foo', 42);
+			}
 
-class TestClass extends Houk<Events> {
-	public value = '';
+			public fireSync(): void {
+				void this.emitSync('event3', { foo: true });
+			}
+		}
 
-	public async fire(): Promise<void> {
-		this.value = await this.emit('test', random);
-	}
-}
+		const t = new Test();
 
-describe('basic hook', () => {
-	it('should receive the event', async () => {
-		const test = new TestClass();
-		let arg;
-
-		test.on('test', string => {
-			arg = string;
-
-			return string + string;
+		const listener1 = jest.fn((a) => {
+			expect(a).toBe(4);
+			t.off('event1', listener1);
 		});
 
-		await test.fire();
+		const listener2 = jest.fn((a, b) => {
+			expect(a).toBe('foo');
+			expect(b).toBe(42);
+		});
 
-		expect(arg).toEqual(random);
-		expect(test.value).toEqual(random + random);
+		const listener3 = jest.fn((a, b) => {
+			expect(a).toBe('foo');
+			expect(b).toBe(42);
+		});
+
+		const listener4 = jest.fn((a) => {
+			expect(a.foo).toBe(true);
+		});
+
+		const listener5 = jest.fn((a) => {
+			expect(a.foo).toBe(true);
+		});
+
+		t.on('event1', listener1);
+		t.on('event2', listener2, true);
+		t.on('event2', listener3);
+		t.on('event3', listener4);
+		t.on('event3', listener5);
+
+		t.fire();
+		t.fire();
+		t.fireSync();
+
+		expect(listener1).toHaveBeenCalledTimes(1);
+		expect(listener2).toHaveBeenCalledTimes(1);
+		expect(listener3).toHaveBeenCalledTimes(2);
+		expect(listener4).toHaveBeenCalledBefore(listener5);
 	});
 });
