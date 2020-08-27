@@ -1,7 +1,7 @@
 # Houk
 
-[![GitHub CI Status](https://img.shields.io/github/workflow/status/krmax44/houk/build/master)](https://github.com/krmax44/houk/actions/)
-[![Coverage](https://gitlab.com/krmax44/houk/badges/master/coverage.svg?style=flat)](https://gitlab.com/krmax44/houk/pipelines)
+[![GitHub CI Status](https://img.shields.io/github/workflow/status/krmax44/houk/build/master)](https://github.com/krmax44/houk/actions?query=workflow%3Abuild)
+[![Code Coverage](https://img.shields.io/codecov/c/github/krmax44/houk)](https://codecov.io/gh/krmax44/houk)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/houk)](https://bundlephobia.com/result?p=houk)
 [![npm version](https://img.shields.io/npm/v/houk)](https://www.npmjs.com/package/houk)
 
