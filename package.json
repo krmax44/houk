@@ -12,7 +12,6 @@
 	"scripts": {
 		"test": "jest",
 		"lint": "xo",
-		"ci": "yarn lint && yarn test --coverage",
 		"build": "tsc",
 		"dev": "tsc -w"
 	},
@@ -49,14 +48,12 @@
 			"unicorn/filename-case": "off",
 			"@typescript-eslint/explicit-function-return-type": "off"
 		},
-		"overrides": [
-			{
-				"files": "**/__tests__/**",
-				"rules": {
-					"no-undef": "off"
-				}
+		"overrides": [{
+			"files": "**/__tests__/**",
+			"rules": {
+				"no-undef": "off"
 			}
-		],
+		}],
 		"prettier": true
 	},
 	"prettier": {
