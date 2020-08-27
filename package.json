@@ -1,6 +1,6 @@
 {
 	"name": "houk",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
 	"files": [
@@ -48,12 +48,14 @@
 			"unicorn/filename-case": "off",
 			"@typescript-eslint/explicit-function-return-type": "off"
 		},
-		"overrides": [{
-			"files": "**/__tests__/**",
-			"rules": {
-				"no-undef": "off"
+		"overrides": [
+			{
+				"files": "**/__tests__/**",
+				"rules": {
+					"no-undef": "off"
+				}
 			}
-		}],
+		],
 		"prettier": true
 	},
 	"prettier": {
