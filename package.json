@@ -15,6 +15,7 @@
 		"build": "tsc",
 		"dev": "tsc -w"
 	},
+	"dependencies": {},
 	"devDependencies": {
 		"@types/jest": "^26.0.10",
 		"@typescript-eslint/eslint-plugin": "^3.10.1",
@@ -68,8 +69,5 @@
 			"pre-commit": "yarn lint",
 			"pre-push": "yarn test --clear-cache && yarn test"
 		}
-	},
-	"dependencies": {
-		"always-array": "^1.1.0"
 	}
 }
