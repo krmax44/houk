@@ -1,6 +1,4 @@
-type EventTypes = {
-	[key: string]: any[];
-};
+type EventTypes = Record<string, any[]>;
 
 type EventStore<Types extends EventTypes> = {
 	[key in keyof Types]: Set<(...q: Types[key]) => void>;
