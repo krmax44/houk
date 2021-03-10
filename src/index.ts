@@ -73,7 +73,7 @@ export default abstract class Houk<Events extends EventTypes> {
 		}
 	}
 
-	private getListeners<EventName extends keyof Events>(
+	protected getListeners<EventName extends keyof Events>(
 		event: EventName
 	): EventStore<Events>[EventName] {
 		if (!this.events[event]) this.events[event] = new Set();
