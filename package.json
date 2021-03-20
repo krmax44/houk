@@ -68,5 +68,11 @@
 			"pre-commit": "yarn lint",
 			"pre-push": "yarn test --clear-cache && yarn test"
 		}
+	},
+	"release": {
+		"branches": [
+			"main",
+			"next"
+		]
 	}
 }
