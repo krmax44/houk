@@ -72,6 +72,15 @@ Unregister an event listener. Returns true on success and false when the event l
 off(eventName, listener) => boolean
 ```
 
+### `Houk.awaitEvent`
+
+Returns a promise that will resolve, once the given event was triggered.
+
+```ts
+await houk.awaitEvent('myEvent');
+console.log('myEvent was emitted');
+```
+
 ### `Houk.emit`
 
 Only available to deriving classes. Trigger all listeners of a particular event. `...args` will be passed along to the listeners.

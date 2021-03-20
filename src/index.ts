@@ -41,6 +41,18 @@ export default abstract class Houk<Events extends EventTypes> {
 	}
 
 	/**
+	 * Returns a promise that will resolve once the given event has been triggered.
+	 * @param event The event name
+	 */
+	public async awaitEvent<EventName extends keyof Events>(
+		event: EventName
+	): Promise<void> {
+		return new Promise((resolve: () => void) => {
+			this.on(event, resolve, true);
+		});
+	}
+
+	/**
 	 Emit an event to all listeners. Listeners will be called in the order of registration. All listeners run at once.abs
 	* @returns The promise will be resolved once all listener functions have returned a resolved promise.
 	 * @param event The event name
