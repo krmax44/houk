@@ -62,9 +62,13 @@ export default abstract class Houk<Events extends EventTypes> {
 		event: EventName,
 		...args: Events[EventName]
 	): Promise<void> {
-		const promises = [...this.getListeners(event)].map(async (listener) =>
-			Promise.resolve(listener(...args))
-		);
+		const promises = [];
+
+		for (const listener of this.getListeners(event)) {
+			const promise: any = listener(...args);
+			if (promise instanceof Promise) promises.push(promise);
+		}
+
 		await Promise.all(promises);
 	}
 
@@ -79,7 +83,8 @@ export default abstract class Houk<Events extends EventTypes> {
 		...args: Events[EventName]
 	): Promise<void> {
 		for (const listener of this.getListeners(event)) {
-			await Promise.resolve(listener(...args));
+			const promise: any = listener(...args);
+			if (promise instanceof Promise) await promise;
 		}
 	}
 
