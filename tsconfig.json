@@ -6,7 +6,7 @@
 		"target": "esnext",
 		"esModuleInterop": true,
 		"declaration": true,
-		"outDir": "./build/"
+		"outDir": "./dist/"
 	},
 	"exclude": ["node_modules", "**/__tests__/**", "build"],
 	"include": ["src/**/*", "jest.d.ts"],
