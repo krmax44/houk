@@ -15,7 +15,12 @@ yarn add houk
 npm i houk
 ```
 
-## Example
+## Usage
+
+<details open>
+<summary>Class-based</summary>
+
+See the complete [API](#api) below.
 
 ```ts
 import Houk from 'houk';
@@ -40,6 +45,33 @@ barista.makeMeACoffee();
 
 // --> Max would like a Cappuccino with oat milk, please.
 ```
+
+</details>
+
+<details>
+<summary>as an open bus</summary>
+
+See the complete [API](#houkbus) below.
+
+```ts
+import { HoukBus } from 'houk';
+
+const coffeeShop = new HoukBus<{
+	order: [name: string, type: string];
+}>();
+
+coffeeShop.on('order', (name, type) => {
+	console.log(`${name} would like a ${type}, please.`);
+});
+
+const name = 'Max';
+const type = 'Cappuccino with oat milk';
+coffeeShop.emit('order', name, type);
+
+// --> Max would like a Cappuccino with oat milk, please.
+```
+
+</details>
 
 ## API
 
@@ -108,6 +140,18 @@ Only available to deriving classes, returns a set of listener functions.
 ```ts
 getListeners(eventName) => Set<() => {})>
 ```
+
+### `HoukBus`
+
+You can also create an open bus, using `HoukBus`:
+
+```ts
+import { HoukBus } from 'houk';
+
+const bus = new HoukBus<EventTypes>();
+```
+
+The same API from `Houk` applies to HoukBus, except that all methods are public.
 
 ## v3 Breaking Changes
 

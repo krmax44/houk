@@ -96,4 +96,13 @@ export default abstract class Houk<Events extends EventTypes> {
 	}
 }
 
-if (typeof module !== 'undefined') module.exports = Houk;
+export class HoukBus<Events extends EventTypes> extends Houk<Events> {
+	public emit = super.emit;
+	public emitSync = super.emitSync;
+	public getListeners = super.getListeners;
+}
+
+if (typeof module !== 'undefined') {
+	module.exports = Houk;
+	module.exports.HoukBus = HoukBus;
+}
