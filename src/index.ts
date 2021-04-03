@@ -86,9 +86,8 @@ export default abstract class Houk<Events extends EventTypes> {
 	protected getListeners<EventName extends keyof Events>(
 		event: EventName
 	): EventStore<Events>[EventName] {
-		if (!this.events[event]) this.events[event] = new Set();
-
-		return this.events[event];
+		const listeners = this.events[event] || (this.events[event] = new Set());
+		return listeners;
 	}
 }
 
