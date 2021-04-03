@@ -91,3 +91,5 @@ export default abstract class Houk<Events extends EventTypes> {
 		return this.events[event];
 	}
 }
+
+if (typeof module !== 'undefined') module.exports = Houk;
