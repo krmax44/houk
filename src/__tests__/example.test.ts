@@ -1,6 +1,6 @@
 import Houk from '..';
 
-describe('HoukClass', () => {
+describe('readme example', () => {
 	it("doesn't put me to shame", () => {
 		expect.assertions(1);
 

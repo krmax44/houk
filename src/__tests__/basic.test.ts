@@ -1,6 +1,6 @@
 import Houk from '..';
 
-describe('HoukClass', () => {
+describe('basic tests', () => {
 	it('emits to listeners', () => {
 		expect.assertions(13);
 

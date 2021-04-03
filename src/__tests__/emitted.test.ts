@@ -1,7 +1,7 @@
 import Houk from '..';
 
-describe('HoukClass', () => {
-	it('emits to listeners', async () => {
+describe('emitted helper', () => {
+	it('resolves the promise at the right time', async () => {
 		expect.assertions(2);
 
 		class Test extends Houk<{
